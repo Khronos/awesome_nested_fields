@@ -36,6 +36,10 @@
       
       options.add.bind('click.nested-fields', function(e) {
         e.preventDefault();
+        options.clicked = $(this);
+        options.currentContainer = options.container;
+        if($(this).attr('container'))
+          options.currentContainer = $($(this).attr('container'));
         var newItem = prepareTemplate(options);
         insertItemWithCallbacks(newItem, null, options);
       });
@@ -103,7 +107,7 @@
     var regexp = new RegExp(options.newItemIndex, 'g');
     var newId = new Date().getTime();
     
-    var contents = options.itemTemplate.html();
+    var contents = options.currentContainer.find(options.itemTemplate).html();
     var newItem = $(contents.replace(regexp, newId));
     newItem.attr('data-new-record', true);
     newItem.attr('data-record-id', newId);
@@ -115,7 +119,7 @@
   
   function insertItem(newItem, options) {
     removeNone(options);
-    options.container.append(newItem);
+    options.currentContainer.append(newItem);
   }
   
   function insertItemWithCallbacks(newItem, onInsertCallback, options) {  
